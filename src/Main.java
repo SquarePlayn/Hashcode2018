@@ -1,7 +1,5 @@
 import java.io.FileReader;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.Scanner;
+import java.util.*;
 
 public class Main {
 	
@@ -124,4 +122,12 @@ public class Main {
 	public static void main(String[] args) {
 		new Main();
 	}
+
+    public void rides() {
+        HashMap<Integer, ArrayList<Ride>> sortedRides = new HashMap<>();
+        for (Ride r: rides) {
+            sortedRides.get(r.start).add(r);
+        }
+
+    }
 }
