@@ -13,10 +13,11 @@ public class Main {
 	static int stepLimit; // < 10^9
 	
 	Ride[] rides;
+	Taxi[] taxis;
 
 	Main() {
 		try {
-			sc = new Scanner(new FileReader("Input/" + "a_example.in"));
+			sc = new Scanner(new FileReader("videos_worth_spreading.in"));
 			
 			numberOfRows = sc.nextInt();
 			numberOfColumns = sc.nextInt();
@@ -26,6 +27,7 @@ public class Main {
 			stepLimit = sc.nextInt();
 			
 			rides = new Ride[amountOfRides];
+			taxis = new Taxi[amountOfVehicles];
 						
 			int a, b, x, y, start, finish;
 			for (int rideID = 0; rideID < amountOfRides; rideID++) {
@@ -35,15 +37,17 @@ public class Main {
 				y = sc.nextInt();
 				start = sc.nextInt();
 				finish = sc.nextInt();
-				rides[rideID] = new Ride(a, b, x, y, start, finish);
-			}
-			
-			
+				rides[rideID] = new Ride(rideID, a, b, x, y, start, finish);
+			}			
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
 			sc.close();
-		}	
+		}
+		
+		
+		
+		
 	}	
 	
 	public static void main(String[] args) {
