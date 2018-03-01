@@ -16,7 +16,7 @@ public class Main {
 
 	Main() {
 		try {
-			sc = new Scanner(new FileReader("videos_worth_spreading.in"));
+			sc = new Scanner(new FileReader("Input/" + "a_example.in"));
 			
 			numberOfRows = sc.nextInt();
 			numberOfColumns = sc.nextInt();
