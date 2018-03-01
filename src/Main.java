@@ -46,9 +46,14 @@ public class Main {
 		}
 		
 		
-		
-		
+	
 	}	
+	
+	void getOutput() {
+		for (int taxiID = 0; taxiID < amountOfRides; taxiID++) {
+			taxis[taxiID].returnAssignment();
+		}
+	}
 	
 	public static void main(String[] args) {
 		new Main();
