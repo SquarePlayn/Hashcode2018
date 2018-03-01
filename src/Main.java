@@ -1,5 +1,7 @@
 import java.io.FileReader;
+import java.util.ArrayList;
 import java.util.Scanner;
+import java.util.HashMap;
 
 public class Main {
 	
@@ -49,4 +51,18 @@ public class Main {
 	public static void main(String[] args) {
 		new Main();
 	}
+	
+	public void rides() {
+		HashMap<Integer, ArrayList<Ride>> sortedRides = new HashMap<>();
+		for (Ride r: rides) {
+			sortedRides.get(r.start).add(r);
+		}
+		
+		
+	}
+	
+	
+	
+	
+	
 }
