@@ -6,7 +6,7 @@ public class Taxi {
 	ArrayList<Ride> assign = new ArrayList<>();
 	int posx, posy;
 	int unavailable = 0;
-	int time;
+	int time, tX, tY;
 
 	Taxi (int taxiID, int goodStartBonus) {
 		this.taxiID = taxiID;
@@ -16,9 +16,9 @@ public class Taxi {
 	
 	
 	int evaluateAssignment() {
-		int tX = 0;
-		int tY = 0;
-		int time = 0;
+		tX = 0;
+		tY = 0;
+		time = 0;
 		int timeOfArrival = 0;
 		int score = 0;	
 		for (Ride ride : assign) {
