@@ -1,8 +1,9 @@
 public class Ride {
-	
+
+	boolean handled = false;
 	int rideID, a, b, x, y, start, finish, drivingDistance;
-	
-	
+
+
 	Ride(int rideID, int a, int b, int x, int y, int start, int finish) {
 		this.rideID = rideID;
 		this.a = a;
@@ -13,10 +14,10 @@ public class Ride {
 		this.finish = finish;
 		drivingDistance = Math.abs(a - x) + Math.abs(b - y);
 	}
-	
-	
-	
-	
-	
-	
+
+
+
+
+
+
 }

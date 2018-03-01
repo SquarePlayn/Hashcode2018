@@ -4,7 +4,7 @@ public class Taxi {
 
 	int taxiID, goodStartBonus;
 	ArrayList<Ride> assign = new ArrayList<>();
-	
+	int posx, posy;
 	
 	Taxi (int taxiID, int goodStartBonus) {
 		this.goodStartBonus = goodStartBonus;
@@ -54,6 +54,7 @@ public class Taxi {
 				throw new IllegalArgumentException("Invalid assignment for taxi(" + taxiID + ").");
 			}
 		}
+		System.out.println("");
 		
 		return score;
 	}
