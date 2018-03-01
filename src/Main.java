@@ -17,7 +17,7 @@ public class Main {
 
 	Main() {
 		try {
-			sc = new Scanner(new FileReader("Input/" + "e_high_bonus.in"));
+			sc = new Scanner(new FileReader("Input/" + "b_should_be_easy.in"));
 			
 			numberOfRows = sc.nextInt();
 			numberOfColumns = sc.nextInt();
@@ -50,8 +50,11 @@ public class Main {
 
 		sortRides();
 
-		if (true) {
+		if (false) {
 			eAlgorithm();
+		}
+		if (true) {
+			WoutKoen();
 		}
 
 		getOutput();
@@ -123,11 +126,32 @@ public class Main {
 		new Main();
 	}
 
-    public void rides() {
-        HashMap<Integer, ArrayList<Ride>> sortedRides = new HashMap<>();
-        for (Ride r: rides) {
-            sortedRides.get(r.start).add(r);
-        }
-
-    }
+	public void WoutKoen() {
+		sortRides();
+		for (int T = 0; T < stepLimit; T++) {
+			for (Taxi t: taxis) {
+				if (T >= t.unavailable) {
+					Ride best = null;
+					double max = 0;
+					for (Ride r : rides) {
+						int distance = Math.abs(t.posx-r.a)+Math.abs(t.posy-r.b);
+						if (distance + T < r.finish-r.drivingDistance && !r.handled) {
+							if (r.drivingDistance/(distance+r.drivingDistance)>max) {
+								max = r.drivingDistance/(distance+r.drivingDistance);
+								best = r;
+							}
+						}
+					}
+					if (best!=null) {
+						System.out.println("Assigned a car, at T: " + T);
+						t.assign.add(best);
+						t.unavailable = T + Math.abs(t.posx-best.a)+Math.abs(t.posy-best.b) + best.drivingDistance;
+						t.posx = best.x;
+						t.posy = best.y;
+						best.handled = true;
+					}
+				}
+			}
+		}
+	}
 }
