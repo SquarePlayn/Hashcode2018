@@ -2,7 +2,13 @@ import java.io.FileReader;
 import java.util.*;
 
 public class Main {
-	
+
+    private int backcutoff = 7550;
+    private int optimalScore = 0;
+    private int optimalCutoff = 0;
+    private int timeCutoff = 1500;
+    private ArrayList<ArrayList> bestSolution;
+
 	private Scanner sc = null;	
 	
 	static int numberOfRows; // < 10^4
@@ -17,8 +23,8 @@ public class Main {
 
 	Main() {
 		try {
-			sc = new Scanner(new FileReader("e_high_bonus.in"));
-			
+			sc = new Scanner(new FileReader("Input/"+"c_no_hurry.in"));
+
 			numberOfRows = sc.nextInt();
 			numberOfColumns = sc.nextInt();
 			amountOfVehicles = sc.nextInt();
@@ -51,17 +57,29 @@ public class Main {
 		sortRides();
 
 		if (true) {
-			eAlgorithm();
+			cAlgorithm();
 		}
 
 
 		if(false) {
-		    cAlgorithm();
+		    scoreOverTimeAlgorithm();
         }
 
-        if(true) {
+        if(false) {
             //centerFinder();
-		    scoreOverTimeAlgorithm();
+            for(int i=0; i<200; i++) {
+                scoreOverTimeAlgorithm();
+                getOutput();
+                backcutoff += 10;
+                for(int p=0; p<amountOfVehicles; p++) {
+                    taxis[p] = new Taxi(p, goodStartBonus);
+                }
+                for(Ride ride : rides) {
+                    ride.handled = false;
+                }
+                System.out.println("Optial cutoff: "+optimalCutoff);
+                System.out.println("Gives score: "+optimalScore);
+            }
         }
 
 		getOutput();
@@ -72,13 +90,17 @@ public class Main {
         while (taxi.time < stepLimit) {
             int smallestDist = Integer.MAX_VALUE;
             Ride bestRide = null;
+            Ride scond = null;
+            int smal2 = Integer.MAX_VALUE;
             for(Ride ride : rides) {
                 if(ride.handled)
                     continue;
                 int dist = Math.abs(taxi.posx-ride.a)+Math.abs(taxi.posy-ride.b);
-                if(taxi.time+dist+ride.drivingDistance > ride.finish)
+                if(taxi.time+dist+ride.drivingDistance >= ride.finish)
                     continue;
                 if (dist < smallestDist) {
+                    scond = bestRide;
+                    smal2 = smallestDist;
                     smallestDist = dist;
                     bestRide = ride;
                 }
@@ -86,6 +108,10 @@ public class Main {
             if(bestRide == null) {
                 taxi.time = stepLimit;
             } else {
+                if(false && scond != null) {
+                    bestRide = scond;
+                    smallestDist = smal2;
+                }
                 bestRide.handled = true;
                 taxi.assign.add(bestRide);
                 taxi.time = taxi.time + smallestDist + bestRide.drivingDistance;
@@ -127,11 +153,15 @@ public class Main {
                 if(ride.handled)
                     continue;
                 int dist = Math.abs(taxi.posx-ride.a)+Math.abs(taxi.posy-ride.b);
-                if(taxi.time+dist+ride.drivingDistance > ride.finish)
+                if(taxi.time+dist+ride.drivingDistance > ride.finish) {
                     continue;
+                }
                 int finishTime = Math.max(taxi.time + dist, ride.start) + ride.drivingDistance;
                 int backDist = Math.abs(ride.x - 2801) + Math.abs(ride.y - 1056);
-                float score = (float)ride.drivingDistance / (finishTime - taxi.time + backDist);
+                if(backDist > backcutoff && (stepLimit - finishTime > timeCutoff)) {
+                    continue;
+                }
+                float score = (float)ride.drivingDistance / (finishTime - taxi.time);
                 if (score > largestScore) {
                     largestScore = score;
                     bestRide = ride;
@@ -250,6 +280,10 @@ public class Main {
 		for (int taxiID = 0; taxiID < amountOfVehicles; taxiID++) {
 			score += taxis[taxiID].returnAssignment();
 		}
+		/*if(score > optimalScore) {
+		    optimalCutoff = backcutoff;
+		    optimalScore = score;
+        }*/
         System.out.println("Score: "+score);
 	}
 

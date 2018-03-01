@@ -28,7 +28,7 @@ public class Taxi {
 			if (timeOfArrival == ride.start) {
 				score += goodStartBonus + ride.drivingDistance;
 				time = timeOfArrival + ride.drivingDistance;
-			} else if (timeOfArrival + ride.drivingDistance < ride.finish) {
+			} else if (timeOfArrival + ride.drivingDistance <= ride.finish) {
 				score += ride.drivingDistance;
 				time = timeOfArrival + ride.drivingDistance;
 			} else {
@@ -54,7 +54,7 @@ public class Taxi {
 			if (timeOfArrival == ride.start) {
 				score += goodStartBonus + ride.drivingDistance;
 				time = timeOfArrival + ride.drivingDistance;
-			} else if (timeOfArrival + ride.drivingDistance < ride.finish) {
+			} else if (timeOfArrival + ride.drivingDistance <= ride.finish) {
 				score += ride.drivingDistance;
 				time = timeOfArrival + ride.drivingDistance;
 			} else {
