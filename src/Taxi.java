@@ -7,6 +7,7 @@ public class Taxi {
 	int posx, posy;
 	
 	Taxi (int taxiID, int goodStartBonus) {
+		this.taxiID = taxiID;
 		this.goodStartBonus = goodStartBonus;
 	}
 	
@@ -19,7 +20,9 @@ public class Taxi {
 		int timeOfArrival = 0;
 		int score = 0;	
 		for (Ride ride : assign) {
-			timeOfArrival = Math.max(time + Math.abs(ride.a-tX) + Math.abs(ride.b-tY), ride.start);	
+			timeOfArrival = Math.max(time + Math.abs(ride.a-tX) + Math.abs(ride.b-tY), ride.start);
+			tX = ride.x;
+			tY = ride.y;
 			if (timeOfArrival == ride.start) {
 				score += goodStartBonus + ride.drivingDistance;
 				time = timeOfArrival + ride.drivingDistance;
@@ -43,7 +46,9 @@ public class Taxi {
 		System.out.print(assign.size() + " ");
 		for (Ride ride : assign) {
 			System.out.print(ride.rideID + " ");
-			timeOfArrival = Math.max(time + Math.abs(ride.a-tX) + Math.abs(ride.b-tY), ride.start);	
+			timeOfArrival = Math.max(time + Math.abs(ride.a-tX) + Math.abs(ride.b-tY), ride.start);
+			tX = ride.x;
+			tY = ride.y;
 			if (timeOfArrival == ride.start) {
 				score += goodStartBonus + ride.drivingDistance;
 				time = timeOfArrival + ride.drivingDistance;
@@ -51,7 +56,7 @@ public class Taxi {
 				score += ride.drivingDistance;
 				time = timeOfArrival + ride.drivingDistance;
 			} else {
-				throw new IllegalArgumentException("Invalid assignment for taxi(" + taxiID + ").");
+				throw new IllegalArgumentException("Invalid assignment for taxi(" + taxiID + ") on ride + "+ride.rideID+".");
 			}
 		}
 		System.out.println("");
