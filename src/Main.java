@@ -17,7 +17,7 @@ public class Main {
 
 	Main() {
 		try {
-			sc = new Scanner(new FileReader("Input/" + "d_metropolis.in"));
+			sc = new Scanner(new FileReader("e_high_bonus.in"));
 			
 			numberOfRows = sc.nextInt();
 			numberOfColumns = sc.nextInt();
@@ -50,12 +50,10 @@ public class Main {
 
 		sortRides();
 
-		if (false) {
+		if (true) {
 			eAlgorithm();
 		}
-		if (false) {
-			WoutKoen();
-		}
+
 
 		if(false) {
 		    cAlgorithm();
@@ -129,14 +127,11 @@ public class Main {
                 if(ride.handled)
                     continue;
                 int dist = Math.abs(taxi.posx-ride.a)+Math.abs(taxi.posy-ride.b);
-                if(taxi.time+dist+ride.drivingDistance >= ride.finish)
+                if(taxi.time+dist+ride.drivingDistance > ride.finish)
                     continue;
                 int finishTime = Math.max(taxi.time + dist, ride.start) + ride.drivingDistance;
                 int backDist = Math.abs(ride.x - 2801) + Math.abs(ride.y - 1056);
-                if(backDist > 8000) {
-                    continue;
-                }
-                float score = (float)ride.drivingDistance / (finishTime - taxi.time);
+                float score = (float)ride.drivingDistance / (finishTime - taxi.time + backDist);
                 if (score > largestScore) {
                     largestScore = score;
                     bestRide = ride;
@@ -210,7 +205,35 @@ public class Main {
                 }
 			}
 		}
-
+		improveE();
+	}
+	
+	void improveE() {
+		for (int taxiID = 0; taxiID < amountOfVehicles; taxiID++) {
+			Taxi taxi = taxis[taxiID];
+			taxi.evaluateAssignment();
+			int tX = taxi.tX;
+			int tY = taxi.tY;
+			int time = taxi.time;
+			int bestTime = Integer.MAX_VALUE;
+			Ride bestRide = null;
+			for (Ride ride : rides) {
+				if (!ride.handled) {
+					int testTime = Math.abs(ride.a - tX) + Math.abs(ride.b - tY) + time;
+					if (testTime < stepLimit - ride.drivingDistance && testTime < bestTime && testTime < ride.start) {
+						bestTime = testTime;
+						bestRide = ride;
+					}
+				}
+			}
+			try {
+				bestRide.handled = true;
+				taxi.assign.add(bestRide);
+				taxiID--;				
+			} catch (Exception e) {
+				
+			}
+		}
 	}
 
 	void sortRides() {
@@ -234,32 +257,4 @@ public class Main {
 		new Main();
 	}
 
-	public void WoutKoen() {
-		sortRides();
-		for (int T = 0; T < stepLimit; T++) {
-			for (Taxi t: taxis) {
-				if (T >= t.unavailable) {
-					Ride best = null;
-					double max = 0;
-					for (Ride r : rides) {
-						int distance = Math.abs(t.posx-r.a)+Math.abs(t.posy-r.b);
-						if (distance + T < r.finish-r.drivingDistance && !r.handled) {
-							if (r.drivingDistance/(distance+r.drivingDistance)>max) {
-								max = r.drivingDistance/(distance+r.drivingDistance);
-								best = r;
-							}
-						}
-					}
-					if (best!=null) {
-						System.out.println("Assigned a car, at T: " + T);
-						t.assign.add(best);
-						t.unavailable = T + Math.abs(t.posx-best.a)+Math.abs(t.posy-best.b) + best.drivingDistance;
-						t.posx = best.x;
-						t.posy = best.y;
-						best.handled = true;
-					}
-				}
-			}
-		}
-	}
 }
