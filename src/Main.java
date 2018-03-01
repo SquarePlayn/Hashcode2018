@@ -129,11 +129,14 @@ public class Main {
                 if(ride.handled)
                     continue;
                 int dist = Math.abs(taxi.posx-ride.a)+Math.abs(taxi.posy-ride.b);
-                if(taxi.time+dist+ride.drivingDistance > ride.finish)
+                if(taxi.time+dist+ride.drivingDistance >= ride.finish)
                     continue;
                 int finishTime = Math.max(taxi.time + dist, ride.start) + ride.drivingDistance;
                 int backDist = Math.abs(ride.x - 2801) + Math.abs(ride.y - 1056);
-                float score = (float)ride.drivingDistance / (finishTime - taxi.time + backDist);
+                if(backDist > 8000) {
+                    continue;
+                }
+                float score = (float)ride.drivingDistance / (finishTime - taxi.time);
                 if (score > largestScore) {
                     largestScore = score;
                     bestRide = ride;
