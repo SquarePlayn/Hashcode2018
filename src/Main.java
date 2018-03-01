@@ -1,6 +1,4 @@
 import java.io.FileReader;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Scanner;
 
 public class Main {
@@ -46,6 +44,7 @@ public class Main {
 		} finally {
 			sc.close();
 		}	
+	}	
 	
 	public static void main(String[] args) {
 		new Main();
