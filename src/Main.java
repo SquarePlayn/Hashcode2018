@@ -17,7 +17,7 @@ public class Main {
 
 	Main() {
 		try {
-			sc = new Scanner(new FileReader("Input/" + "e_high_bonus.in"));
+			sc = new Scanner(new FileReader("Input/" + "d_metropolis.in"));
 			
 			numberOfRows = sc.nextInt();
 			numberOfColumns = sc.nextInt();
@@ -50,12 +50,117 @@ public class Main {
 
 		sortRides();
 
-		if (true) {
+		if (false) {
 			eAlgorithm();
 		}
 
+		if(false) {
+		    cAlgorithm();
+        }
+
+        if(true) {
+            //centerFinder();
+		    scoreOverTimeAlgorithm();
+        }
+
 		getOutput();
 	}
+
+	public void cAlgorithm() {
+	    Taxi taxi = taxis[0];
+        while (taxi.time < stepLimit) {
+            int smallestDist = Integer.MAX_VALUE;
+            Ride bestRide = null;
+            for(Ride ride : rides) {
+                if(ride.handled)
+                    continue;
+                int dist = Math.abs(taxi.posx-ride.a)+Math.abs(taxi.posy-ride.b);
+                if(taxi.time+dist+ride.drivingDistance > ride.finish)
+                    continue;
+                if (dist < smallestDist) {
+                    smallestDist = dist;
+                    bestRide = ride;
+                }
+            }
+            if(bestRide == null) {
+                taxi.time = stepLimit;
+            } else {
+                bestRide.handled = true;
+                taxi.assign.add(bestRide);
+                taxi.time = taxi.time + smallestDist + bestRide.drivingDistance;
+                taxi.posx = bestRide.x;
+                taxi.posy = bestRide.y;
+            }
+            Arrays.sort(taxis, new Comparator<Taxi>() {
+                @Override
+                public int compare(Taxi t1, Taxi t2) {
+                    return t1.time - t2.time;
+                }
+            });
+            taxi = taxis[0];
+        }
+        Arrays.sort(taxis, new Comparator<Taxi>() {
+            @Override
+            public int compare(Taxi t1, Taxi t2) {
+                return t1.taxiID - t2.taxiID;
+            }
+        });
+    }
+
+    public void centerFinder() {
+	    long x = 0;
+	    long y = 0;
+	    for(Ride ride : rides) {
+	        x += ride.a;
+	        y += ride.b;
+        }
+        System.out.println("X: "+(x/amountOfRides)+" Y: "+(y/amountOfRides));
+    }
+
+    public void scoreOverTimeAlgorithm() {
+        Taxi taxi = taxis[0];
+        while (taxi.time < stepLimit) {
+            float largestScore = 0;
+            Ride bestRide = null;
+            for(Ride ride : rides) {
+                if(ride.handled)
+                    continue;
+                int dist = Math.abs(taxi.posx-ride.a)+Math.abs(taxi.posy-ride.b);
+                if(taxi.time+dist+ride.drivingDistance > ride.finish)
+                    continue;
+                int finishTime = Math.max(taxi.time + dist, ride.start) + ride.drivingDistance;
+                int backDist = Math.abs(ride.x - 2801) + Math.abs(ride.y - 1056);
+                float score = (float)ride.drivingDistance / (finishTime - taxi.time + backDist);
+                if (score > largestScore) {
+                    largestScore = score;
+                    bestRide = ride;
+                }
+            }
+            if(bestRide == null) {
+                taxi.time = stepLimit;
+            } else {
+                bestRide.handled = true;
+                taxi.assign.add(bestRide);
+                int dist = Math.abs(taxi.posx-bestRide.a)+Math.abs(taxi.posy-bestRide.b);
+                taxi.time = Math.max(taxi.time + dist, bestRide.start) + bestRide.drivingDistance;
+                taxi.posx = bestRide.x;
+                taxi.posy = bestRide.y;
+            }
+            Arrays.sort(taxis, new Comparator<Taxi>() {
+                @Override
+                public int compare(Taxi t1, Taxi t2) {
+                    return t1.time - t2.time;
+                }
+            });
+            taxi = taxis[0];
+        }
+        Arrays.sort(taxis, new Comparator<Taxi>() {
+            @Override
+            public int compare(Taxi t1, Taxi t2) {
+                return t1.taxiID - t2.taxiID;
+            }
+        });
+    }
 
 	public void eAlgorithm() {
 		int searchdepth = stepLimit;

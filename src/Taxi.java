@@ -5,6 +5,7 @@ public class Taxi {
 	int taxiID, goodStartBonus;
 	ArrayList<Ride> assign = new ArrayList<>();
 	int posx, posy;
+	int time;
 	
 	Taxi (int taxiID, int goodStartBonus) {
 		this.taxiID = taxiID;
